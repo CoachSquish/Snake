@@ -9,12 +9,13 @@ public class Grid {
     public static int xFrame = 500;
     public static int yFrame = 500;
     public static int gridUnitSize = 20;
-    public static String[][] grid = new String[xFrame/gridUnitSize][yFrame/gridUnitSize];
+    public static Object[][] grid = new Object[xFrame/gridUnitSize][yFrame/gridUnitSize];
+    public static boolean isApple = false;
 
     public static void initializeGrid() {
         for (int i = 0; i < grid.length; i++) { 
             for (int j = 0; j < grid[i].length; j++) {  
-                grid[i][j] = "";   
+                grid[i][j] = null;   
             }
         }
     }

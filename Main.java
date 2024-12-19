@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
 
 public class Main {
     public static void main(String[] args) {
-        Color DARK_GREEN = new Color(20, 150,32);
         final int FPS = 60;
         final int frameDuration = 1000/ FPS; //milliseconds
 
@@ -26,10 +25,14 @@ public class Main {
         frame.add(label);
         frame.setVisible(true);
 
+        Object snake = new Snake();
+        Object AppleObject = new Apple();
+
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent key) {
-                Snake.getDirection(key);
+                Snake snakeObject = (Snake) snake;
+                snakeObject.getDirection(key);
             }
 
             @Override
@@ -43,7 +46,7 @@ public class Main {
             }
         });
         Grid.initializeGrid();
-        Snake.spawnSnake();
+        snake.Spawn();
         int count = 1;
         while(!Snake.gameOver) {
             long startTime = System.currentTimeMillis();
@@ -55,25 +58,23 @@ public class Main {
 
             // Move snake every 12 frames
             if(count % 10 == 0) {
-                Snake.moveSnake();
+                Snake snakeObject = (Snake) snake;
+                snakeObject.moveSnake();
             }
 
-
+            
             // if there is no apple, spawn an apple
-            if(!Apple.isApple) {
-                Apple.spawnApple();
+            if(!Grid.isApple) {
+                AppleObject.Spawn();
             }
 
             // Draws the next frame
             for (int i = 0; i < Grid.grid.length; i++) {
                 for (int j = 0; j < Grid.grid[i].length; j++) {
-                    if (Grid.grid[i][j] == "snake") {
-                        g = Grid.drawSquare(g, DARK_GREEN, i, j);
+                    if(Grid.grid[i][j] != null) {
+                        g = Grid.grid[i][j].Draw(g, i, j);
                     }
-                    else if (Grid.grid[i][j] == "apple") {
-                        g = Grid.drawSquare(g, Color.RED, i, j);
-                    }
-                    else if (Grid.grid[i][j] == "end") {
+                    else {
                         g = Grid.drawSquare(g, Color.BLACK, i, j);
                     }
                 }

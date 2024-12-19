@@ -4,16 +4,21 @@
  */
 
 import java.util.ArrayList;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.font.GraphicAttribute;
 
-public class Snake {
+public class Snake extends Object{
     public static int[] head = {Grid.xFrame/Grid.gridUnitSize/2, Grid.yFrame/Grid.gridUnitSize/2};
     public static ArrayList<int[]> snake = new ArrayList<>();
     public static boolean gameOver = false;
+    private final Color DARK_GREEN = new Color(20, 150,32);
 
     private static int[] direction = { 0 , -1 };
 
-    public static void spawnSnake() {
+    @Override
+    public void Spawn() {
         if(snake.size() != 0) {
             for(int i = 0; i < snake.size() - 1; i++) {
                 snake.remove(0);
@@ -29,7 +34,12 @@ public class Snake {
         displaySnakeOnGrid();
     }
 
-    public static void moveSnake() {
+    @Override
+    public Graphics Draw(Graphics g, int i, int j) {
+        return Grid.drawSquare(g, DARK_GREEN, i, j);
+    }
+
+    public void moveSnake() {
         int[] newHead = { head[0] + direction[0], head[1] + direction[1] };
         if((newHead[0] > Grid.xFrame/Grid.gridUnitSize - 1) || (newHead[1] > Grid.yFrame/Grid.gridUnitSize - 1) || (newHead[0] < 0) || (newHead[1] < 0)) { // Is snake out of bounds?
             gameOver = true;
@@ -39,13 +49,13 @@ public class Snake {
         head = newHead;
         snake.add(0, head);
         if(!grow) {
-            Grid.grid[snake.get(snake.size()-1)[0]][snake.get(snake.size() - 1)[1]] = ""; // This Long line of saddness gets the coordinates of the end of the snake on the grid
+            Grid.grid[snake.get(snake.size()-1)[0]][snake.get(snake.size() - 1)[1]] = null; // This Long line of saddness gets the coordinates of the end of the snake on the grid
             snake.remove(snake.size() - 1);
         }
         displaySnakeOnGrid();
     }
 
-    public static void getDirection(KeyEvent key) {
+    public void getDirection(KeyEvent key) {
         if(!gameOver) {    
             int[] retVal = { 0, 0 };
             int userInput = key.getKeyCode();
@@ -77,23 +87,23 @@ public class Snake {
         }
     }
 
-    private static boolean appleCheck(int[] newHead) {
-        if(Grid.grid[newHead[0]][newHead[1]] == "apple") {
-            Apple.isApple = false;
+    private boolean appleCheck(int[] newHead) {
+        if(Grid.grid[newHead[0]][newHead[1]] instanceof Apple) {
+            Grid.isApple = false;
             return true;
         }
         return false;
     }
 
-    private static void snakeCheck(int[] newHead) {
-        if(Grid.grid[newHead[0]][newHead[1]] == "snake") {
+    private void snakeCheck(int[] newHead) {
+        if(Grid.grid[newHead[0]][newHead[1]] instanceof Snake) {
             gameOver = true;
         }
     }
 
-    private static void displaySnakeOnGrid() {
+    private void displaySnakeOnGrid() {
         for (int i = 0; i < snake.size(); i++) {
-            Grid.grid[snake.get(i)[0]][snake.get(i)[1]] = "snake";
+            Grid.grid[snake.get(i)[0]][snake.get(i)[1]] = this;
         }
     }
 }
