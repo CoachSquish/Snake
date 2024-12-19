@@ -3,21 +3,29 @@
  * Date: 11/1/2024
  */
 
-public class Apple {
-    public static int[] appleCoordinates = {Util.getRandom(Grid.xFrame/Grid.gridUnitSize), Util.getRandom(Grid.yFrame/Grid.gridUnitSize)};
-    public static boolean isApple = false;
+import java.awt.Color;
+import java.awt.Graphics;
 
-    public static void spawnApple() {
+public class Apple extends Object{
+    public static int[] appleCoordinates = {Util.getRandom(Grid.xFrame/Grid.gridUnitSize), Util.getRandom(Grid.yFrame/Grid.gridUnitSize)};
+
+    @Override
+    public void Spawn() {
         while(snakeCheck()) {
             appleCoordinates[0] = Util.getRandom(Grid.xFrame/Grid.gridUnitSize);
             appleCoordinates[1] = Util.getRandom(Grid.yFrame/Grid.gridUnitSize);
         }
-        isApple = true;
-        Grid.grid[appleCoordinates[0]][appleCoordinates[1]] = "apple";
+        Grid.isApple = true;
+        Grid.grid[appleCoordinates[0]][appleCoordinates[1]] = this;
     }
 
-    private static boolean snakeCheck() {
-        if ((Grid.grid[appleCoordinates[0]][appleCoordinates[1]] == "snake")) {
+    @Override
+    public Graphics Draw(Graphics g, int i, int j) {
+        return Grid.drawSquare(g, Color.RED, i, j);
+    }
+
+    private boolean snakeCheck() {
+        if ((Grid.grid[appleCoordinates[0]][appleCoordinates[1]] instanceof Snake)) {
             return true;
         }
         return false;
